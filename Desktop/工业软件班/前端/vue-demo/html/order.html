@@ -1,0 +1,219 @@
+  
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8"   />
+  <meta http-equiv="X-UA-Compatible"  content="IE=edge">
+  <meta name="viewport"  content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<style type="text/css">
+		.search{
+            width: 20%;            
+            margin: 100px auto;
+            display: flex;
+            /*border: 1px solid red;*/
+        }
+        .search input{
+            float: left;//左浮动
+            flex: 4;
+            height: 30px;
+            outline: none;
+            border: 1px solid #4876FF ;
+            box-sizing: border-box;//盒子模型，怪异IE盒子模型，width=content+border*2+padding*2
+            padding-left: 10px;
+        }
+        .search button{
+            float: right;
+            flex: 1;
+            height: 30px;
+						width: 50px;
+            background-color: #4876FF;
+            color: white;
+            border-style: none;
+            outline: none;
+        }
+        .search button i{
+            font-style: normal;
+        }
+        .search button:hover{
+            font-size: 16px;
+        }
+				
+				.hr1{
+					height:10px;
+					border:none;
+					border-top:1px solid  #4876FF ;
+					padding-left:5px;
+					/* margin-top: 10px; */
+					margin-bottom: 10px;
+				}
+				.btn1{
+	 /* 按钮美化 */
+	width:20px; /* 宽度 */
+	height: 20px; /* 高度 */
+	border-width: 0px; /* 边框宽度 */
+	border-radius: 3px; /* 边框半径 */
+	background: #1E90FF; /* 背景颜色 */
+	cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+	outline: none; /* 不显示轮廓线 */
+	font-family: Microsoft YaHei; /* 设置字体 */
+	color: white; /* 字体颜色 */
+	font-size: 5px; /* 字体大小 */
+}
+
+	</style>
+  <title>订单管理</title>
+</head>
+<body>
+  <div id="app">
+	  
+	  
+    <div class="panel"  style="background:white ;height: 50PX;">
+      <div class="panel-heading">
+        <h3 class="panel-title"  style="color: #4876FF;font-family: Microsoft YaHei">订单管理</h3>
+				<div style="margin-left:930px;margin-top: 10px;">
+					<div class="search" style="margin-top: -25PX;">
+				  <input type="text" placeholder="请输入..." name="" id="" value="" v-model="brandParam" />
+            <button class="dele"  @click="query" style="width: 60px;outline: none;border-width: 0px;border-radius: 10px;"><i>搜</i></button>
+      </div>
+			</div>
+      </div>
+    </div>
+	 <hr  class="hr1"/>
+	
+	
+    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+      <table class="table table-bordered table-hover table-striped" >
+        <thead >
+          <tr style="text-align: center;">
+            <th>品牌</th>
+            <th>订单日期</th>
+            <th>订单价格</th>
+            <th>购买数量</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in orders" :key="item.id">
+            <td>{{item.brand}}</td>
+            <td>{{item.orderDate | dateFormat('yyyy-MM-dd hh:mm:ss')}}</td>
+            <td>{{item.price}}</td>
+            <td>
+              <button class="btn1" @click="increase(index)">+</button>
+              {{item.num}}
+              <button class="btn1" @click="decrease(index)" :disabled="item.num <= 1">-</button>
+            </td>
+            <td><button style="background: #1E90FF;color: white;width: 40px;height:20px;font-size:10px;"  @click="deleteOrder(index)">删除</button></td>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>订单总额：{{totalPrice}}元</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+
+
+   <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+      <legend>新增订单</legend>
+      <div class="form-group">
+        <label>品牌</label>
+        <input type="text" v-model="brand" class="form-control" placeholder="如：笔记本，手机">
+      </div>
+      <div class="form-group">
+        <label>价格</label>
+        <input type="text" v-model="price" class="form-control" placeholder="如：50">
+      </div>
+      <div class="form-group">
+        <label>数量</label>
+        <input type="text" v-model="num" class="form-control" placeholder="如：3">
+      </div>
+      <button type="submit" style=" background:#4876FF;outline: none;" @click="addOrder" class="btn btn-primary">提交</button>
+    </div>
+  </div>
+	
+	
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        id: 0,
+        brand: '', 
+        price: 0, 
+        num: 0, 
+        orders: [], 
+        brandParam: '', 
+      },
+      methods: {
+        addOrder() {
+          this.orders.push({
+            id: this.id++,
+            brand: this.brand,
+            orderDate: new Date(),
+            price: this.price,
+            num: this.num
+          })
+          this.brand = ''
+          this.price = ''
+          this.num = ''
+        },
+        increase(index) {
+          this.orders[index].num++
+        },
+        decrease(index) {
+          this.orders[index].num--
+        },
+        deleteOrder(index) {
+          this.orders.splice(index, 1)
+        }, 
+        query() {
+          let _this = this
+          this.orders = this.orders.filter(function(item) {
+            return item.brand.includes(_this.brandParam)
+          })
+        }
+      },
+      computed: {
+        totalPrice: function() {
+          return this.orders.reduce((value, item) => {
+            return value + item.price * item.num
+          }, 0)
+        }
+      }
+    })
+    Vue.filter("dateFormat", function(value, format) {
+      let date = {
+        "M+": value.getMonth() + 1,
+        "d+": value.getDate(),
+        "h+": value.getHours(),
+        "m+": value.getMinutes(),
+        "s+": value.getSeconds(),
+      }
+      if(/(y+)/.test(format)){
+        format = format.replace(RegExp.$1, (value.getFullYear() + "").substr(4-RegExp.$1.length));
+        for(let k in date) {
+          if(new RegExp(`(${k})`).test(format)){
+            format = format.replace(RegExp.$1, (RegExp.$1.length == 1)?
+                    (date[k]):(("00" + date[k]).substr(("" + date[k]).length)))
+          }
+        }
+        return format;
+      }
+    })
+    Vue.filter("yyyyMMdd", function(date){
+      let dt = new Date(date);
+      let y = dt.getFullYear();
+      let m = (dt.getMonth() + 1).toString().padStart(2, '0');
+      let d = dt.getDate().toString().padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    })
+  </script>
+</body>
+
+</html>
