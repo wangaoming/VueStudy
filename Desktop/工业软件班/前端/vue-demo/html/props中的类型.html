@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<div>{{pmsg}}</div>
+			<menu-item :pstr="pstr" :pnum='12' :pboolean='true' parry="parr" pobj="pobj"></menu-item>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script>
+			Vue.component('menu-item',{
+				props:['pstr','pnum','pboolean','parray','pobj'],
+				template:`,
+				<div>
+				<div>字符串：{{typeof pstr}} ----{{pstr}}</div>
+				<div>数值:{{typeof pnum}} ----{{12 + pnum}}</div>
+				<div>布尔型: {{typeof pboolean}} ----{{pboolean}}</div>
+				<ul>
+					<li :key="index" v-for="(item,index) in parry">{{index + 1}}</li>
+				</ul>
+				
+				<div>
+				<span>{{pobj.name}}</span>
+				<span>{{pobj.age}}</span>
+				</div>
+				</div>`
+			})
+			let vm = new Vue({
+				el:'#app',
+				data:{
+					pmsg:'父组件的内容',
+					pstr:'字符',
+					parr:["周一","周二","周三"],
+					pobj:{
+						name:'vue',
+						age:'20'
+					}
+				}
+				
+				
+			})
+		</script>
+	</body>
+</html>

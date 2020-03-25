@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<div id="app">
+		<parent></parent>
+	</div>
+	<template id="child">
+		<h3>我是子组件</h3>
+	</template>
+	<template id="parent">
+		<div>
+			<h1>我是父组件</h1>
+			<child></child>
+			<child></child>
+		</div>
+	</template>
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script>
+		var Parent = {
+			// id相对应
+			
+			template:'#parent',
+			components:{
+				'child':{
+					template:'#child',
+				}
+			}
+		}
+		let vm = new Vue({
+			el:'#app',
+			components:{
+				'parent':Parent
+			}
+		})
+	</script>
+	<body>
+	</body>
+	
+</html>

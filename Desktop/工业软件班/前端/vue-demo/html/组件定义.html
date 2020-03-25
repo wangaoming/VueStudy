@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>组件定义</title>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 全局 -->
+			<button-counter></button-counter><br>
+			<!-- 局部 -->
+			<my-component content="10 + 10"></my-component>//我是局部注册组件，10 + 10 
+			<my-component :content="10 + 10"></my-component>//我是局部注册组件，20  理由：
+		</div>
+			<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+			<script>
+				
+				// 全局组件
+				Vue.component('button-counter',{
+					data:function(){
+						return{
+							count:0
+						}
+					},
+					template:`
+					<div>
+					 <h3>点击了{{count}}次</h3>
+					 <button @click="count++">点击</button>
+					 </div>`
+				})
+				<!-- 局部组件 -->
+				let myComponent = {
+					props:['content'],
+					template:`<span>我是局部注册组件，{{content}}</span>`
+				}
+				<!--2.创建vue实列。需要指定el和data -->
+				let vm = new Vue({
+					<!-- 3.指定创建的vue监管的视图区域 需要在指定的id管辖的区域内有效 -->
+					el:'#app',
+					components:{
+						'my-component':myComponent
+					}
+				})
+			</script>
+	</body>
+</html>
